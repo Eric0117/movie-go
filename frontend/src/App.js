@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from "react"
 
+// routes
+import Router from "./routes"
+
+// recoil
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from "recoil"
+
+import ThemeProvider from "./theme"
+import ScrollToTop from "./components/ScrollToTop"
+
+import Spinner from "./components/Spinner"
+
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from "@tanstack/react-query"
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            suspense: true,
+            refetchOnWindowFocus: false,
+            retry: 0,
+        },
+    },
+})
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <RecoilRoot>
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider>
+                    <ScrollToTop />
+                    <Router />
+                </ThemeProvider>
+            </QueryClientProvider>
+        </RecoilRoot>
+    )
 }
 
-export default App;
+export default App
